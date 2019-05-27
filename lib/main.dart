@@ -7,6 +7,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Application',
       theme: ThemeData(
         primarySwatch: Colors.orange,
@@ -35,7 +36,7 @@ class _MyLoginPageState extends State<LoginPage> {
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           children: <Widget>[
             // For App logo and name
-            SizedBox(height: 60.0),
+            SizedBox(height: 40.0),
             Column(
               children: <Widget>[
                 Image.asset("assets/app_logo.jpg"),
@@ -69,7 +70,7 @@ class _MyLoginPageState extends State<LoginPage> {
             ),
 
             // For Login Button
-            SizedBox(height: 10.0),
+            SizedBox(height: 20.0),
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
