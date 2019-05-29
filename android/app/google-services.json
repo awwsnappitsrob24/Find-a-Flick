@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "208002153112",
+    "firebase_url": "https://find-a-flick.firebaseio.com",
+    "project_id": "find-a-flick",
+    "storage_bucket": "find-a-flick.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208002153112:android:443490763c6b2b79",
+        "android_client_info": {
+          "package_name": "com.example.find_a_flick"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "208002153112-ia50emp6nor06fd79frlhhh5ggadectr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2kFhcrGsAEhUd3y4iRrr_VYxk_T5X0Zc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "208002153112-ia50emp6nor06fd79frlhhh5ggadectr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
