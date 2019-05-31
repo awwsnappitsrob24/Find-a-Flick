@@ -1,4 +1,5 @@
 import 'package:find_a_flick/email_reg.dart';
+import 'package:find_a_flick/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -151,7 +152,7 @@ class _MyLoginPageState extends State<LoginPage> {
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
 
         // If login is successful, go to homepage
-        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage()));
       } catch(e) {
         // Error message
         toastKey.currentState.showSnackBar(new SnackBar(
