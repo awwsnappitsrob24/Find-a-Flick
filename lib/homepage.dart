@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Homepage extends StatefulWidget {
 
@@ -15,6 +14,27 @@ class _HomepageState extends State<Homepage> {
       appBar: AppBar(
         title: Text('Homepage', style: TextStyle(color: Colors.white)),
       ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            // Button to set the user's location on the map
+            ButtonTheme(
+              minWidth: 300.0,
+              child: RaisedButton(
+                onPressed: setUserLocation,
+                child: Text('Set Location'), color: Colors.orange,
+              )
+            )
+
+            // The map itself
+            
+          ],
+        ),
+      ),
     );
   }
+}
+
+void setUserLocation() {
+  print('Set user location.');
 }
