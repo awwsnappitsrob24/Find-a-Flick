@@ -1,4 +1,4 @@
-package com.example.find_a_flick;
+package com.robien.find_a_flick;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
