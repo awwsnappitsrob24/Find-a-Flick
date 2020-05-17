@@ -1,5 +1,5 @@
-import 'package:find_a_flick/email_reg.dart';
-import 'package:find_a_flick/homepage.dart';
+import 'package:find_a_flick/pages/email_reg.dart';
+import 'package:find_a_flick/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
