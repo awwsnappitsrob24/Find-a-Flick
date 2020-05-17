@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:208002153112:android:443490763c6b2b79",
+        "mobilesdk_app_id": "1:208002153112:android:940a7ce46c3a1b6e62eeed",
         "android_client_info": {
-          "package_name": "com.example.find_a_flick"
+          "package_name": "com.robien.find_a_flick"
         }
       },
       "oauth_client": [
