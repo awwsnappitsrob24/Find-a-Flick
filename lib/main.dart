@@ -1,5 +1,6 @@
 import 'package:find_a_flick/pages/email_reg.dart';
 import 'package:find_a_flick/pages/homepage.dart';
+import 'package:find_a_flick/pages/change_pass.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -76,6 +77,9 @@ class _MyLoginPageState extends State<LoginPage> {
                           if (email.trim().isEmpty) {
                             return 'Email is required';
                           }
+                          else {
+                            return null;
+                          }
                         },
                         onSaved: (input) => _email = input,
                       ),
@@ -93,44 +97,62 @@ class _MyLoginPageState extends State<LoginPage> {
                           if (password.trim().isEmpty) {
                             return 'Password is required';
                           }
+                          else {
+                            return null;
+                          }
                         },
                         onSaved: (input) => _password = input,
                       ),
 
-                      // For Login Button
+                      // For Login and Register Button
                       SizedBox(height: 20.0),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            RaisedButton(
-                              onPressed: emailLogin,
-                              child: Text('Login w/ Email'), color: Colors.orange,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                RaisedButton(
+                                  onPressed: emailLogin,
+                                  child: Text('Login'), color: Colors.orange,
+                                ),
+                              ],
+                            )
+                          ),
+                          SizedBox(width: 20.0),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                RaisedButton(
+                                  onPressed: emailRegister,
+                                  child: Text('Register'), color: Colors.orange,
+                                ),
+                              ],
                             ),
-                            RaisedButton(
-                              onPressed: face_login,
-                              child: Text('Login w/ Face'), color: Colors.orange,
-                            ),
-                          ],
-                        )
+                          )
+                        ],
                       ),
 
-                      SizedBox(height: 2.0),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            RaisedButton(
-                              onPressed: emailRegister,
-                              child: Text('Register w/ Email'), color: Colors.orange,
-                            ),
-                            RaisedButton(
-                              onPressed: face_register,
-                              child: Text('Register w/ Face'), color: Colors.orange,
-                            ),
-                          ],
-                        ),
-                      )
+                      // Change password inkwell
+                      SizedBox(height: 10.0),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Forgot your password? "),
+                          InkWell(
+                            child: Text("Click here.", style: TextStyle(color: Colors.blue)),
+                            onTap: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ChangePasswordPage())
+                              )
+                            } 
+                          )
+                        ]
+                      )  
                     ],
                   ),
                 ),

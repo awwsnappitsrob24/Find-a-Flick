@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EmailRegistrationForm extends StatefulWidget {
  const EmailRegistrationForm({Key key}) : super(key: key);
@@ -139,8 +140,12 @@ class _EmailRegistrationFormState extends State<EmailRegistrationForm> {
           _isLoading = true;
         });
 
-        // Create user
+        // Create user in firebase db and add the document in the collection
         await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+
+        await Firestore.instance.collection("users").add({
+          'email' : _email,
+        });
 
         // After authenticating, hide Modal Progress HUD
         setState(() {
