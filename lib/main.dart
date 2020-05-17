@@ -3,6 +3,8 @@ import 'package:find_a_flick/pages/homepage.dart';
 import 'package:find_a_flick/pages/change_pass.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,130 +36,134 @@ class _MyLoginPageState extends State<LoginPage> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final toastKey = new GlobalKey<ScaffoldState>();
+  bool _isLoading = false;
   
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        key: toastKey,
-        body: SafeArea(
-          child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
-            children: <Widget>[
-              Container(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      // For App logo and name
-                      SizedBox(height: 40.0),
-                      Column(
-                        children: <Widget>[
-                          Image.asset("assets/app_logo.jpg"),
-                          SizedBox(height: 20.0),
-                          Text(
-                            "Find-a-Flick",
-                            style: TextStyle(
-                              fontSize: 25.0,
-                              fontStyle: FontStyle.italic
+    return ModalProgressHUD(
+      inAsyncCall: _isLoading,
+      child: SafeArea(
+        child: Scaffold(
+          key: toastKey,
+          body: SafeArea(
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              children: <Widget>[
+                Container(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        // For App logo and name
+                        SizedBox(height: 40.0),
+                        Column(
+                          children: <Widget>[
+                            Image.asset("assets/app_logo.jpg"),
+                            SizedBox(height: 20.0),
+                            Text(
+                              "Find-a-Flick",
+                              style: TextStyle(
+                                fontSize: 25.0,
+                                fontStyle: FontStyle.italic
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-
-                      // For Email
-                      SizedBox(height: 30.0),
-                      TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          filled: true,
+                          ],
                         ),
-                        validator: (String email) {
-                          if (email.trim().isEmpty) {
-                            return 'Email is required';
-                          }
-                          else {
-                            return null;
-                          }
-                        },
-                        onSaved: (input) => _email = input,
-                      ),
 
-                      // For password
-                      SizedBox(height: 10.0),
-                      TextFormField(
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          filled: true,
-                        ),
-                        validator: (String password) {
-                          if (password.trim().isEmpty) {
-                            return 'Password is required';
-                          }
-                          else {
-                            return null;
-                          }
-                        },
-                        onSaved: (input) => _password = input,
-                      ),
-
-                      // For Login and Register Button
-                      SizedBox(height: 20.0),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                RaisedButton(
-                                  onPressed: emailLogin,
-                                  child: Text('Login'), color: Colors.orange,
-                                ),
-                              ],
-                            )
+                        // For Email
+                        SizedBox(height: 30.0),
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                            filled: true,
                           ),
-                          SizedBox(width: 20.0),
-                          Container(
-                            child: Column(
-                              children: <Widget>[
-                                RaisedButton(
-                                  onPressed: emailRegister,
-                                  child: Text('Register'), color: Colors.orange,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                          validator: (String email) {
+                            if (email.trim().isEmpty) {
+                              return 'Email is required';
+                            }
+                            else {
+                              return null;
+                            }
+                          },
+                          onSaved: (input) => _email = input,
+                        ),
 
-                      // Change password inkwell
-                      SizedBox(height: 10.0),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Forgot your password? "),
-                          InkWell(
-                            child: Text("Click here.", style: TextStyle(color: Colors.blue)),
-                            onTap: () => {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ChangePasswordPage())
+                        // For password
+                        SizedBox(height: 10.0),
+                        TextFormField(
+                          keyboardType: TextInputType.text,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Password',
+                            filled: true,
+                          ),
+                          validator: (String password) {
+                            if (password.trim().isEmpty) {
+                              return 'Password is required';
+                            }
+                            else {
+                              return null;
+                            }
+                          },
+                          onSaved: (input) => _password = input,
+                        ),
+
+                        // For Login and Register Button
+                        SizedBox(height: 20.0),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  RaisedButton(
+                                    onPressed: emailLogin,
+                                    child: Text('Login'), color: Colors.orange,
+                                  ),
+                                ],
                               )
-                            } 
-                          )
-                        ]
-                      )  
-                    ],
+                            ),
+                            SizedBox(width: 20.0),
+                            Container(
+                              child: Column(
+                                children: <Widget>[
+                                  RaisedButton(
+                                    onPressed: emailRegister,
+                                    child: Text('Register'), color: Colors.orange,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+
+                        // Change password inkwell
+                        SizedBox(height: 10.0),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text("Forgot your password? "),
+                            InkWell(
+                              child: Text("Click here.", style: TextStyle(color: Colors.blue)),
+                              onTap: () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ChangePasswordPage())
+                                )
+                              } 
+                            )
+                          ]
+                        )  
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -167,17 +173,46 @@ class _MyLoginPageState extends State<LoginPage> {
 
   // Login method using Firebase
   Future<void> emailLogin() async {
+    String uid;
+
     // Validate fields
     final formState = _formKey.currentState;
     if(formState.validate()) {
       formState.save();
       try {
+        // When user presses login button, show Modal Progress HUD
+        setState(() {
+          _isLoading = true;
+        });
+
         // Create user
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+
+        // Add unique uid to firebase db collection after logging in
+        FirebaseUser user = await FirebaseAuth.instance.currentUser();
+        Firestore.instance.collection('users')
+          .where("email", isEqualTo: user.email)
+          .snapshots()
+          .listen((data) => 
+            data.documents.forEach((doc) {
+              doc.reference.updateData({
+                'uid' : user.uid
+              });
+            }));
+
+        // After authenticating, hide Modal Progress HUD
+        setState(() {
+          _isLoading = false;
+        });
 
         // If login is successful, go to homepage
         Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage()));
       } catch(e) {
+        // Hide Modal Progress HUD on unsuccessful login
+        setState(() {
+          _isLoading = false;
+        });
+
         // Error message
         toastKey.currentState.showSnackBar(new SnackBar(
           content: new Text(e.message.toString()),

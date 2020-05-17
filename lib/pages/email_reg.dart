@@ -145,6 +145,7 @@ class _EmailRegistrationFormState extends State<EmailRegistrationForm> {
 
         await Firestore.instance.collection("users").add({
           'email' : _email,
+          'uid' : null  // set to this to null but change it once logged in
         });
 
         // After authenticating, hide Modal Progress HUD
