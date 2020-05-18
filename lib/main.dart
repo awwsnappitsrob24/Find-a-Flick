@@ -43,113 +43,112 @@ class _MyLoginPageState extends State<LoginPage> {
       inAsyncCall: _isLoading,
       child: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomPadding: false,
           key: toastKey,
-          body: SafeArea(
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              children: <Widget>[
-                Container(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        // For App logo and name
-                        SizedBox(height: 40.0),
-                        Column(
-                          children: <Widget>[
-                            Image.asset("assets/app_logo.jpg"),
-                            SizedBox(height: 20.0),
-                            Text(
-                              "Find-a-Flick",
-                              style: TextStyle(
-                                fontSize: 25.0,
-                                fontStyle: FontStyle.italic
-                              ),
+          body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/login_bgimg.jpg"), // background image to fit whole page
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: SafeArea(
+              child: ListView(
+                //padding: EdgeInsets.symmetric(horizontal: 24.0),
+                children: <Widget>[
+                  Container(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          // For App logo and name
+                          Column(
+                            children: <Widget>[
+                              Image.asset("assets/app_logo.png"),                          
+                            ],
+                          ),
+
+                          // For Email
+                          TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              filled: true,
                             ),
-                          ],
-                        ),
-
-                        // For Email
-                        SizedBox(height: 30.0),
-                        TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            filled: true,
+                            validator: (String email) {
+                              if (email.trim().isEmpty) {
+                                return 'Email is required';
+                              }
+                              else {
+                                return null;
+                              }
+                            },
+                            onSaved: (input) => _email = input,
                           ),
-                          validator: (String email) {
-                            if (email.trim().isEmpty) {
-                              return 'Email is required';
-                            }
-                            else {
-                              return null;
-                            }
-                          },
-                          onSaved: (input) => _email = input,
-                        ),
 
-                        // For password
-                        SizedBox(height: 10.0),
-                        TextFormField(
-                          keyboardType: TextInputType.text,
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Password',
-                            filled: true,
+                          // For password
+                          SizedBox(height: 10.0),
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              filled: true,
+                            ),
+                            validator: (String password) {
+                              if (password.trim().isEmpty) {
+                                return 'Password is required';
+                              }
+                              else {
+                                return null;
+                              }
+                            },
+                            onSaved: (input) => _password = input,
                           ),
-                          validator: (String password) {
-                            if (password.trim().isEmpty) {
-                              return 'Password is required';
-                            }
-                            else {
-                              return null;
-                            }
-                          },
-                          onSaved: (input) => _password = input,
-                        ),
 
-                        // For Login and Register Button
-                        SizedBox(height: 20.0),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  RaisedButton(
-                                    onPressed: emailLogin,
-                                    child: Text('Login'), color: Colors.orange,
-                                  ),
-                                ],
+                          // For Login and Register Button
+                          SizedBox(height: 60.0),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    RaisedButton(
+                                      onPressed: emailLogin,
+                                      child: Text('Login'), color: Colors.orange,
+                                    ),
+                                  ],
+                                )
+                              ),
+                              SizedBox(width: 20.0),
+                              Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    RaisedButton(
+                                      onPressed: emailRegister,
+                                      child: Text('Register'), color: Colors.orange,
+                                    ),
+                                  ],
+                                ),
                               )
-                            ),
-                            SizedBox(width: 20.0),
-                            Container(
-                              child: Column(
-                                children: <Widget>[
-                                  RaisedButton(
-                                    onPressed: emailRegister,
-                                    child: Text('Register'), color: Colors.orange,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                            ],
+                          ),
 
-                        // Copyright notice
-                        SizedBox(height: 30.0),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: new Text('2020 \u00a9 Robien Marquez All Rights Reserved.', style: TextStyle(fontSize: 10)),
-                        ) 
-                      ],
+                          // Copyright notice
+                          SizedBox(height: 60.0),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: new Text('2020 \u00a9 Robien Marquez All Rights Reserved.', style: TextStyle(fontSize: 10)),
+                          ) 
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
