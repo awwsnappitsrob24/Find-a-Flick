@@ -92,7 +92,7 @@ class _MyLoginPageState extends State<LoginPage> {
                           ),
 
                           // For password
-                          //SizedBox(height: 10.0),
+                          SizedBox(height: 10.0),
                           TextFormField(
                             keyboardType: TextInputType.text,
                             obscureText: true,
@@ -215,9 +215,7 @@ class _MyLoginPageState extends State<LoginPage> {
   void emailRegister() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (BuildContext context) {
-        return EmailRegistrationForm();
-      }
-    ));
+      MaterialPageRoute(builder: (context) => EmailRegistrationForm())
+    );
   }
 }
