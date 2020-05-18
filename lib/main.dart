@@ -1,6 +1,5 @@
 import 'package:find_a_flick/pages/email_reg.dart';
 import 'package:find_a_flick/pages/homepage.dart';
-import 'package:find_a_flick/pages/change_pass.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -140,24 +139,12 @@ class _MyLoginPageState extends State<LoginPage> {
                           ],
                         ),
 
-                        // Change password inkwell
-                        SizedBox(height: 10.0),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Forgot your password? "),
-                            InkWell(
-                              child: Text("Click here.", style: TextStyle(color: Colors.blue)),
-                              onTap: () => {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => ChangePasswordPage())
-                                )
-                              } 
-                            )
-                          ]
-                        )  
+                        // Copyright notice
+                        SizedBox(height: 30.0),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: new Text('2020 \u00a9 Robien Marquez All Rights Reserved.', style: TextStyle(fontSize: 10)),
+                        ) 
                       ],
                     ),
                   ),
@@ -173,7 +160,6 @@ class _MyLoginPageState extends State<LoginPage> {
 
   // Login method using Firebase
   Future<void> emailLogin() async {
-    String uid;
 
     // Validate fields
     final formState = _formKey.currentState;
@@ -221,10 +207,7 @@ class _MyLoginPageState extends State<LoginPage> {
     }
   }
 
-  void face_login() {
-    print("Face login pressed.");
-  }
-
+  // Go to user registration page
   void emailRegister() {
     Navigator.push(
       context,
@@ -232,9 +215,5 @@ class _MyLoginPageState extends State<LoginPage> {
         return EmailRegistrationForm();
       }
     ));
-  }
-
-  void face_register() {
-    print("Face register pressed.");
   }
 }
