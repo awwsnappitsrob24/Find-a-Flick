@@ -1,5 +1,6 @@
 import 'package:find_a_flick/pages/email_reg.dart';
 import 'package:find_a_flick/pages/homepage.dart';
+import 'package:find_a_flick/screensize/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,6 +40,8 @@ class _MyLoginPageState extends State<LoginPage> {
   
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
       child: SafeArea(
@@ -46,6 +49,8 @@ class _MyLoginPageState extends State<LoginPage> {
           resizeToAvoidBottomPadding: false,
           key: toastKey,
           body: Container(
+            height:SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/login_bgimg.jpg"), // background image to fit whole page
@@ -87,7 +92,7 @@ class _MyLoginPageState extends State<LoginPage> {
                           ),
 
                           // For password
-                          SizedBox(height: 10.0),
+                          //SizedBox(height: 10.0),
                           TextFormField(
                             keyboardType: TextInputType.text,
                             obscureText: true,

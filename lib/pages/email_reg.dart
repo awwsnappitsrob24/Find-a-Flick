@@ -1,6 +1,7 @@
 import 'package:find_a_flick/main.dart';
 import 'package:find_a_flick/pages/tos.dart';
 import 'package:flutter/material.dart';
+import 'package:find_a_flick/screensize/sizeconfig.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,8 @@ class _EmailRegistrationFormState extends State<EmailRegistrationForm> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
       child: Scaffold(
@@ -30,88 +33,98 @@ class _EmailRegistrationFormState extends State<EmailRegistrationForm> {
         appBar: AppBar(
           title: Text('Register User', style: TextStyle(color: Colors.white)),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 100.0),
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      filled: true,
+        body: Container(
+          height:SizeConfig.screenHeight,
+          width: SizeConfig.screenWidth,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/login_bgimg.jpg"), // background image to fit whole page
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 100.0),
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        filled: true,
+                      ),
+                      validator: (String email) {
+                        if (email.trim().isEmpty) {
+                          return 'Email is required';
+                        }
+                      },
+                      onSaved: (input) => _email = input,
                     ),
-                    validator: (String email) {
-                      if (email.trim().isEmpty) {
-                        return 'Email is required';
-                      }
-                    },
-                    onSaved: (input) => _email = input,
-                  ),
-                  SizedBox(height: 10.0),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      filled: true,
+                    SizedBox(height: 10.0),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        filled: true,
+                      ),
+                      validator: (String password) {
+                        if (password.trim().isEmpty) {
+                          return 'Password is required';
+                        }
+                      },
+                      onSaved: (input) => _password = input,
                     ),
-                    validator: (String password) {
-                      if (password.trim().isEmpty) {
-                        return 'Password is required';
-                      }
-                    },
-                    onSaved: (input) => _password = input,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: Row(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Row(
+                        children: <Widget>[
+                          Checkbox(
+                            value: _agreedToTOS,
+                            onChanged: _setAgreedToTOS,
+                          ),
+                          GestureDetector(
+                            onTap: () => _setAgreedToTOS(_agreedToTOS),
+                            child: Container(
+                              child: Row(
+                                children: <Widget>[
+                                  new Text("I agree to the "),
+                                  new InkWell(
+                                    child: Text("Terms of Services", style: TextStyle(color: Colors.blue)),
+                                    onTap: () => {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => TOSPage())
+                                      )
+                                    } 
+                                  ),
+                                ],
+                              )
+                            )       
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 50.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Checkbox(
-                          value: _agreedToTOS,
-                          onChanged: _setAgreedToTOS,
-                        ),
-                        GestureDetector(
-                          onTap: () => _setAgreedToTOS(_agreedToTOS),
-                          child: Container(
-                            child: Row(
-                              children: <Widget>[
-                                new Text("I agree to the "),
-                                new InkWell(
-                                  child: Text("Terms of Services", style: TextStyle(color: Colors.blue)),
-                                  onTap: () => {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => TOSPage())
-                                    )
-                                  } 
-                                ),
-                              ],
-                            )
-                          )       
+                        RaisedButton(
+                          onPressed: _submittable() ? registerUser : null,
+                          color: Colors.orange[300],
+                          child: Text('Register'),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 50.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      RaisedButton(
-                        onPressed: _submittable() ? registerUser : null,
-                        color: Colors.orange[300],
-                        child: Text('Register'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
+                  ],
+                ),
+              )
+            ),
           ),
         ),
       ),
