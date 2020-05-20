@@ -35,39 +35,42 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    return ModalProgressHUD(
-      inAsyncCall: _isLoading,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Homepage', style: TextStyle(color: Colors.white)),
-        ),
-        body: currentLocation == null ? 
-          Container(
-            height:SizeConfig.screenHeight,
-            width: SizeConfig.screenWidth,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text("Find-A-Flick could not find your current location.", textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
-                  Text("Please turn on location services.\n", textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
-                  RaisedButton(
-                    onPressed: enableLocationServices,
-                    color: Colors.orange[300],
-                    child: Text('Enable Location Services'),
-                  ),
-                ]
-              ),
-            ),
-          ): GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(currentLocation.latitude, currentLocation.longitude),
-            zoom: 15.0,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: ModalProgressHUD(
+        inAsyncCall: _isLoading,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Homepage', style: TextStyle(color: Colors.white)),
           ),
-        ),
-      )
+          body: currentLocation == null ? 
+            Container(
+              height:SizeConfig.screenHeight,
+              width: SizeConfig.screenWidth,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Find-A-Flick could not find your current location.", textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+                    Text("Please turn on location services.\n", textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+                    RaisedButton(
+                      onPressed: enableLocationServices,
+                      color: Colors.orange[300],
+                      child: Text('Enable Location Services'),
+                    ),
+                  ]
+                ),
+              ),
+            ): GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(currentLocation.latitude, currentLocation.longitude),
+              zoom: 15.0,
+            ),
+          ),
+        )
+      ),
     );
   }
 
