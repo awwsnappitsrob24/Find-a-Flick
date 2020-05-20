@@ -29,7 +29,7 @@ class _EmailRegistrationFormState extends State<EmailRegistrationForm> {
       inAsyncCall: _isLoading,
       child: Scaffold(
         key: toastKey,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text('Register User', style: TextStyle(color: Colors.white)),
         ),

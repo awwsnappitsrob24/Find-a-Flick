@@ -46,7 +46,7 @@ class _MyLoginPageState extends State<LoginPage> {
       inAsyncCall: _isLoading,
       child: SafeArea(
         child: Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: true,
           key: toastKey,
           body: Container(
             height:SizeConfig.screenHeight,
