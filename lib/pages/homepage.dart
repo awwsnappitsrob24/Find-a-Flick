@@ -80,11 +80,11 @@ class _HomepageState extends State<Homepage> {
   }
 
   // Set the primary position of the camera to the user's location
-  // Continue to emit user's location as it changes
   Future<void> _getLocation() async {
     currentLocation = await Geolocator()
       .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
+    // Continue to emit user's location as it changes
     Geolocator().getPositionStream(LocationOptions(
       accuracy: LocationAccuracy.best,
       timeInterval: 500)).listen((position) {
@@ -94,10 +94,13 @@ class _HomepageState extends State<Homepage> {
 
         // Set state to rebuild GoogleMap widget
         setState(() {
-          //Remove current marker if it exists
+          // Remove current marker if it exists
           if(markers.isNotEmpty) {
+            print(markers.length);
             markers.clear();
+            print(markers.length);
           }
+          print(markers.length);
           
           // Add marker at latitude and longitude
           markers.add(
@@ -108,7 +111,9 @@ class _HomepageState extends State<Homepage> {
               infoWindow: InfoWindow(title: "You"),
             )
           );
+          print(markers.length);
 
+          // Move camera to the new position
           mapController?.moveCamera(
             CameraUpdate.newCameraPosition(
               CameraPosition(
@@ -120,6 +125,10 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
           );
+
+          // While getting the realt time location, get the nearest *ANYTHING* around the location
+          // Get nearest movie theaters in a 10 mile radius.
+
         }
       );
     });
