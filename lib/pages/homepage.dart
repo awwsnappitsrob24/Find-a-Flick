@@ -3,6 +3,7 @@ import 'package:find_a_flick/screensize/sizeconfig.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart' as Location;
 import 'package:android_intent/android_intent.dart';
 
 class Homepage extends StatefulWidget {
@@ -16,6 +17,8 @@ class _HomepageState extends State<Homepage> {
   bool _isLoading = false;
   GoogleMapController mapController;
   Position currentLocation;
+  Location.Location myLocation;
+  Set<Marker> markers = Set();
   
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -64,9 +67,11 @@ class _HomepageState extends State<Homepage> {
               ),
             ): GoogleMap(
             onMapCreated: _onMapCreated,
+            mapType: MapType.normal,
+            markers: markers,
             initialCameraPosition: CameraPosition(
               target: LatLng(currentLocation.latitude, currentLocation.longitude),
-              zoom: 15.0,
+              zoom: 17.0,
             ),
           ),
         )
@@ -75,13 +80,52 @@ class _HomepageState extends State<Homepage> {
   }
 
   // Set the primary position of the camera to the user's location
+  // Continue to emit user's location as it changes
   Future<void> _getLocation() async {
     currentLocation = await Geolocator()
       .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
-    turnOffLoadingCircle();
+    Geolocator().getPositionStream(LocationOptions(
+      accuracy: LocationAccuracy.best,
+      timeInterval: 500)).listen((position) {
+        // Handle real time location
+        print(position.latitude);
+        print(position.longitude);
+
+        // Set state to rebuild GoogleMap widget
+        setState(() {
+          //Remove current marker if it exists
+          if(markers.isNotEmpty) {
+            markers.clear();
+          }
+          
+          // Add marker at latitude and longitude
+          markers.add(
+            Marker(
+              markerId: MarkerId("Your Location"),
+              position: LatLng(position.latitude, position.longitude),
+              icon: BitmapDescriptor.defaultMarker,
+              infoWindow: InfoWindow(title: "You"),
+            )
+          );
+
+          mapController?.moveCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: LatLng(
+                  position.latitude,
+                  position.longitude
+                ),
+                zoom: 18.0,
+              ),
+            ),
+          );
+        }
+      );
+    });
   }
 
+  // Prompt user to open location services
   void enableLocationServices() async {
     final AndroidIntent intent = new AndroidIntent(
       action: 'android.settings.LOCATION_SOURCE_SETTINGS',
