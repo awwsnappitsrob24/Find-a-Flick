@@ -7,7 +7,10 @@ import 'package:location/location.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart' as LocationManager;
 import 'package:find_a_flick/tab_views/navigation.dart';
+import 'package:find_a_flick/tab_views/nearbymovies.dart';
 import 'package:android_intent/android_intent.dart';
+import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart' as NavLocation;
+
 
 class Homepage extends StatefulWidget {
 
@@ -27,6 +30,7 @@ class _HomepageState extends State<Homepage> {
   List<LocationManager.PlacesSearchResult> places = [];
   String errorMessage = "";
   int _selectedIndex = 0;
+  Homepage home;
 
 
   void _onMapCreated(GoogleMapController controller) {
@@ -74,7 +78,7 @@ class _HomepageState extends State<Homepage> {
             selectedItemColor: Colors.orange[300],
             onTap: _onItemTapped,
           ),
-          body: currentLocation == null ? 
+          body: _selectedIndex == 0? currentLocation == null ? 
             Container(
               height:SizeConfig.screenHeight,
               width: SizeConfig.screenWidth,
@@ -101,7 +105,9 @@ class _HomepageState extends State<Homepage> {
               target: LatLng(currentLocation.latitude, currentLocation.longitude),
               zoom: 12.0,
             ),
-          ),
+          ) : _selectedIndex == 1? 
+          Navigation().createState().build(context) :
+          NearbyMovies().createState().build(context)
         )
       ),
     );
@@ -163,7 +169,7 @@ class _HomepageState extends State<Homepage> {
                 snippet: "Tap for directions",
                 onTap: () {
                   // Call method for navigation when tapping the info window
-                  //Navigation().createState().build(context);
+
                 },
               ),
               position: LatLng(f.geometry.location.lat,

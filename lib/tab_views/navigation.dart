@@ -65,14 +65,7 @@ class _NavigationState extends State<Navigation> {
             RaisedButton(
               child: Text("Start Navigation"),
               onPressed: () async {
-                await _directions.startNavigation(
-                  origin: origin,
-                  destination: destination,
-                  mode: NavigationMode.drivingWithTraffic,
-                  simulateRoute: true,
-                  language: "English", 
-                  units: VoiceUnits.metric
-                );
+                //getDirections(origin, destination);
               },
             ),
             SizedBox(
@@ -106,6 +99,17 @@ class _NavigationState extends State<Navigation> {
           ]),
         ),
       ),
+    );
+  }
+
+  void getDirections(Location org, Location dest) async {
+    await _directions.startNavigation(
+      origin: org,
+      destination: dest,
+      mode: NavigationMode.drivingWithTraffic,
+      simulateRoute: true,
+      language: "English", 
+      units: VoiceUnits.metric
     );
   }
 }
