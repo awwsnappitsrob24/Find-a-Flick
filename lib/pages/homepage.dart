@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:find_a_flick/screensize/sizeconfig.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart' as Location;
+import 'package:geolocator/geolocator.dart' as Geolocator;
+import 'package:location/location.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart' as LocationManager;
 import 'package:android_intent/android_intent.dart';
 
 class Homepage extends StatefulWidget {
@@ -16,9 +18,14 @@ class _HomepageState extends State<Homepage> {
 
   bool _isLoading = false;
   GoogleMapController mapController;
-  Position currentLocation;
-  Location.Location myLocation;
+  Geolocator.Position currentLocation;
+  LocationManager.Location myLocation;
   Set<Marker> markers = Set();
+  static const kGoogleApiKey = "YOUR_API_KEY";
+  
+  LocationManager.GoogleMapsPlaces _places = LocationManager.GoogleMapsPlaces(apiKey: kGoogleApiKey); 
+  List<LocationManager.PlacesSearchResult> places = [];
+  String errorMessage = "";
   
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -71,7 +78,7 @@ class _HomepageState extends State<Homepage> {
             markers: markers,
             initialCameraPosition: CameraPosition(
               target: LatLng(currentLocation.latitude, currentLocation.longitude),
-              zoom: 17.0,
+              zoom: 11.0,
             ),
           ),
         )
@@ -81,28 +88,17 @@ class _HomepageState extends State<Homepage> {
 
   // Set the primary position of the camera to the user's location
   Future<void> _getLocation() async {
-    currentLocation = await Geolocator()
-      .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    currentLocation = await Geolocator.Geolocator()
+      .getCurrentPosition(desiredAccuracy: Geolocator.LocationAccuracy.best);
 
     // Continue to emit user's location as it changes
-    Geolocator().getPositionStream(LocationOptions(
-      accuracy: LocationAccuracy.best,
+    Geolocator.Geolocator().getPositionStream(Geolocator.LocationOptions(
+      accuracy: Geolocator.LocationAccuracy.best,
       timeInterval: 500)).listen((position) {
         // Handle real time location
-        print(position.latitude);
-        print(position.longitude);
-
         // Set state to rebuild GoogleMap widget
-        setState(() {
-          // Remove current marker if it exists
-          if(markers.isNotEmpty) {
-            print(markers.length);
-            markers.clear();
-            print(markers.length);
-          }
-          print(markers.length);
-          
-          // Add marker at latitude and longitude
+        setState(() {          
+          // Add marker at latitude and longitude of current user location
           markers.add(
             Marker(
               markerId: MarkerId("Your Location"),
@@ -111,26 +107,51 @@ class _HomepageState extends State<Homepage> {
               infoWindow: InfoWindow(title: "You"),
             )
           );
-          print(markers.length);
 
-          // Move camera to the new position
-          mapController?.moveCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
-                target: LatLng(
-                  position.latitude,
-                  position.longitude
-                ),
-                zoom: 18.0,
-              ),
-            ),
-          );
-
-          // While getting the realt time location, get the nearest *ANYTHING* around the location
           // Get nearest movie theaters in a 10 mile radius.
-
+          getNearbyPlaces(position);
         }
       );
+    });
+  }
+
+  // Get nearby places from current position
+  void getNearbyPlaces(Geolocator.Position currPosition) async {
+
+    // Get user's currentLocation and uses it to search nearby places
+    myLocation = LocationManager.Location(currPosition.latitude, currPosition.longitude);
+    final result = await _places.searchNearbyWithRadius(myLocation, 100000, type: "movie_theater");
+
+    setState(() {
+      // Turn off loading progress hud
+      turnOffLoadingCircle();
+
+      // Get all the results if there are any
+      if (result.status == "OK") {
+        // Place all results in the list
+        this.places = result.results;
+        // Iterate through the list, and markers on all the results
+        result.results.forEach((f) {
+          // Only mark those that are movie theaters
+          if(f.types.contains("movie_theater")) {
+            // Add markers in nearby places results
+            Marker resultMarker = Marker(
+              markerId: MarkerId(f.name),
+              infoWindow: InfoWindow(
+                title: "${f.name}",
+                //snippet: "${f.types?.first}"
+              ),
+              position: LatLng(f.geometry.location.lat,
+                f.geometry.location.lng              
+              ),
+            );
+            // Add it to Set
+            markers.add(resultMarker);
+          }
+        });
+      } else {
+        this.errorMessage = result.errorMessage;
+      }    
     });
   }
 
