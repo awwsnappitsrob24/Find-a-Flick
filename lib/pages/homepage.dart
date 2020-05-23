@@ -3,13 +3,10 @@ import 'package:find_a_flick/screensize/sizeconfig.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart' as Geolocator;
-import 'package:location/location.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart' as LocationManager;
-import 'package:find_a_flick/tab_views/navigation.dart';
 import 'package:find_a_flick/tab_views/nearbymovies.dart';
 import 'package:android_intent/android_intent.dart';
-import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart' as NavLocation;
+import 'package:maps_launcher/maps_launcher.dart';
 
 
 class Homepage extends StatefulWidget {
@@ -30,7 +27,6 @@ class _HomepageState extends State<Homepage> {
   List<LocationManager.PlacesSearchResult> places = [];
   String errorMessage = "";
   int _selectedIndex = 0;
-  Homepage home;
 
 
   void _onMapCreated(GoogleMapController controller) {
@@ -62,20 +58,17 @@ class _HomepageState extends State<Homepage> {
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                title: Text('Home'),              
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.gps_fixed),
-                title: Text('Directions'),
+                icon: Icon(Icons.theaters),
+                title: Text('Nearby Theaters'),              
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.movie),
-                title: Text('Movies'),
+                title: Text('Showtimes'),
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.orange[300],
+            selectedItemColor: Colors.white,
+            backgroundColor: Colors.orange[300],
             onTap: _onItemTapped,
           ),
           body: _selectedIndex == 0? currentLocation == null ? 
@@ -105,8 +98,7 @@ class _HomepageState extends State<Homepage> {
               target: LatLng(currentLocation.latitude, currentLocation.longitude),
               zoom: 12.0,
             ),
-          ) : _selectedIndex == 1? 
-          Navigation().createState().build(context) :
+          ) :
           NearbyMovies().createState().build(context)
         )
       ),
@@ -166,10 +158,10 @@ class _HomepageState extends State<Homepage> {
               markerId: MarkerId(f.name),
               infoWindow: InfoWindow(
                 title: "${f.name}",
-                snippet: "Tap for directions",
+                snippet: "Tap for directions", 
                 onTap: () {
-                  // Call method for navigation when tapping the info window
-
+                  // Call google maps passing in the origin and destination
+                  openGoogleMaps(f.name);
                 },
               ),
               position: LatLng(f.geometry.location.lat,
@@ -207,9 +199,13 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-   void turnOnLoadingCircle() {
+  void turnOnLoadingCircle() {
     setState(() {
       _isLoading = true;
     });
+  }
+
+  void openGoogleMaps(String destName) {
+    MapsLauncher.launchQuery(destName);
   }
 }
