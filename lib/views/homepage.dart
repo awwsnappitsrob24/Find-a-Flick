@@ -4,9 +4,10 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart' as Geolocator;
 import 'package:google_maps_webservice/places.dart' as LocationManager;
-import 'package:find_a_flick/tab_views/nearbymovies.dart';
+import 'package:find_a_flick/views/nearbymovies.dart';
 import 'package:android_intent/android_intent.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 
 class Homepage extends StatefulWidget {
@@ -113,7 +114,7 @@ class _HomepageState extends State<Homepage> {
     // Continue to emit user's location as it changes
     Geolocator.Geolocator().getPositionStream(Geolocator.LocationOptions(
       accuracy: Geolocator.LocationAccuracy.best,
-      timeInterval: 500)).listen((position) {
+      timeInterval: 60000)).listen((position) {
         // Handle real time location
         // Set state to rebuild GoogleMap widget
         setState(() {          
@@ -149,6 +150,7 @@ class _HomepageState extends State<Homepage> {
       if (result.status == "OK") {
         // Place all results in the list
         this.places = result.results;
+        
         // Iterate through the list, and markers on all the results
         result.results.forEach((f) {
           // Only mark those that are movie theaters
@@ -160,8 +162,11 @@ class _HomepageState extends State<Homepage> {
                 title: "${f.name}",
                 snippet: "Tap for directions", 
                 onTap: () {
-                  // Call google maps passing in the origin and destination
-                  openGoogleMaps(f.name);
+                  // 
+
+                  // Show the alert dialog for user to choose b/w navigation and
+                  // adding the theater to the 
+                  showAlertDialog(context, f.name);
                 },
               ),
               position: LatLng(f.geometry.location.lat,
@@ -176,6 +181,53 @@ class _HomepageState extends State<Homepage> {
         this.errorMessage = result.errorMessage;
       }    
     });
+  }
+  
+  // Dialog when tapping on an info window
+  void showAlertDialog(BuildContext context, String theaterName) { 
+    
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(theaterName),
+      content: Text(
+        'Would you like to search for directions or look for showtimes?' ,
+      ),
+      actions: [
+        // set up the buttons
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            FlatButton(
+              child: Text("Directions"),
+              onPressed:  () {
+                openGoogleMaps(theaterName);
+              },
+            ),
+            FlatButton(
+              child: Text("Showtimes"),
+              onPressed:  () {
+                // work on this next
+              },
+            ),
+            FlatButton(
+              child: Text("Cancel"),
+              onPressed:  () {
+                Navigator.pop(context);
+              },
+            ),
+          ]
+        ),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   // Prompt user to open location services

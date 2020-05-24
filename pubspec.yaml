@@ -39,6 +39,7 @@ dev_dependencies:
   google_maps_flutter: ^0.5.14+1
   geolocator: ^5.3.1
   maps_launcher: ^1.2.0
+  giffy_dialog: ^1.7.0
   android_intent: ^0.3.7+2
 
 
