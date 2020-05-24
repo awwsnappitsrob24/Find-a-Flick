@@ -33,11 +33,19 @@ dev_dependencies:
   modal_progress_hud: ^0.1.3
   firebase_auth: ^0.16.0
   cloud_firestore: ^0.13.5
-  google_maps_flutter: ^0.5.14+1
-  geolocator: ^5.3.1
   location: ^3.0.2
   flutter_google_places: ^0.2.5
   google_maps_webservice: ^0.0.16
+  google_maps_flutter: ^0.5.14+1
+  geolocator: ^5.3.1
+<<<<<<< HEAD
+  location: ^3.0.2
+  flutter_google_places: ^0.2.5
+  google_maps_webservice: ^0.0.16
+=======
+  maps_launcher: ^1.2.0
+  giffy_dialog: ^1.7.0
+>>>>>>> navigation_branch
   android_intent: ^0.3.7+2
 
 

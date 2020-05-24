@@ -1,5 +1,5 @@
 import 'package:find_a_flick/main.dart';
-import 'package:find_a_flick/pages/tos.dart';
+import 'package:find_a_flick/views/tos.dart';
 import 'package:flutter/material.dart';
 import 'package:find_a_flick/screensize/sizeconfig.dart';
 import 'package:fluttertoast/fluttertoast.dart';
