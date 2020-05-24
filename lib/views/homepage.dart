@@ -7,8 +7,6 @@ import 'package:google_maps_webservice/places.dart' as LocationManager;
 import 'package:find_a_flick/views/nearbymovies.dart';
 import 'package:android_intent/android_intent.dart';
 import 'package:maps_launcher/maps_launcher.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
-
 
 class Homepage extends StatefulWidget {
 
