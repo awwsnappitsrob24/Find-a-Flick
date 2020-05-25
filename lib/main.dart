@@ -1,6 +1,6 @@
 import 'package:find_a_flick/views/email_reg.dart';
 import 'package:find_a_flick/views/homepage.dart';
-import 'package:find_a_flick/screensize/sizeconfig.dart';
+import 'package:find_a_flick/models/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

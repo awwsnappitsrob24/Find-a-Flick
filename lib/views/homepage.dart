@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:find_a_flick/screensize/sizeconfig.dart';
+import 'package:find_a_flick/models/sizeconfig.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart' as Geolocator;
 import 'package:google_maps_webservice/places.dart' as LocationManager;
-import 'package:find_a_flick/views/nearbymovies.dart';
+import 'package:find_a_flick/models/movie.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 import 'package:android_intent/android_intent.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
@@ -14,7 +16,8 @@ class Homepage extends StatefulWidget {
   _HomepageState createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageState extends State<Homepage> 
+  with SingleTickerProviderStateMixin {
 
   bool _isLoading = false;
   GoogleMapController mapController;
@@ -26,6 +29,7 @@ class _HomepageState extends State<Homepage> {
   List<LocationManager.PlacesSearchResult> places = [];
   String errorMessage = "";
   int _selectedIndex = 0;
+  Future<Movie> futureMovie;
 
 
   void _onMapCreated(GoogleMapController controller) {
@@ -35,11 +39,15 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-  
+
     // Get user's location at startup to instantiate the center of the primary camera position
     _getLocation();
 
     turnOffLoadingCircle();
+
+    // Get movies
+    futureMovie = fetchMovie();
+    
   }
 
   @override
@@ -97,8 +105,36 @@ class _HomepageState extends State<Homepage> {
               target: LatLng(currentLocation.latitude, currentLocation.longitude),
               zoom: 12.0,
             ),
-          ) :
-          NearbyMovies().createState().build(context)
+          ) : MaterialApp(
+            title: 'Fetch Data Example',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: Scaffold(
+              appBar: AppBar(
+                title: Text('Fetch Data Example'),
+              ),
+              body: Container(
+                height:SizeConfig.screenHeight,
+                width: SizeConfig.screenWidth,
+                child: Center(
+                  child: FutureBuilder<Movie>(
+                    future: futureMovie,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data.title);
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+
+                      // By default, show a loading spinner.
+                      return CircularProgressIndicator();
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
         )
       ),
     );
@@ -109,10 +145,10 @@ class _HomepageState extends State<Homepage> {
     currentLocation = await Geolocator.Geolocator()
       .getCurrentPosition(desiredAccuracy: Geolocator.LocationAccuracy.best);
 
-    // Continue to emit user's location as it changes
+    // Continue to emit user's location every 10 minutes
     Geolocator.Geolocator().getPositionStream(Geolocator.LocationOptions(
       accuracy: Geolocator.LocationAccuracy.best,
-      timeInterval: 60000)).listen((position) {
+      timeInterval: 600000)).listen((position) {
         // Handle real time location
         // Set state to rebuild GoogleMap widget
         setState(() {          
@@ -160,8 +196,6 @@ class _HomepageState extends State<Homepage> {
                 title: "${f.name}",
                 snippet: "Tap for directions", 
                 onTap: () {
-                  // 
-
                   // Show the alert dialog for user to choose b/w navigation and
                   // adding the theater to the 
                   showAlertDialog(context, f.name);
@@ -193,8 +227,8 @@ class _HomepageState extends State<Homepage> {
       actions: [
         // set up the buttons
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             FlatButton(
               child: Text("Directions"),
@@ -205,7 +239,10 @@ class _HomepageState extends State<Homepage> {
             FlatButton(
               child: Text("Showtimes"),
               onPressed:  () {
-                // work on this next
+                // Go to the showtimes tab which calls the the showtimes class
+                Navigator.pop(context);
+                fetchMovie();
+                _onItemTapped(1);
               },
             ),
             FlatButton(
@@ -226,6 +263,22 @@ class _HomepageState extends State<Homepage> {
         return alert;
       },
     );
+  }
+
+  Future<Movie> fetchMovie() async {
+    final response = await http.get('https://jsonplaceholder.typicode.com/albums/1');
+
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Movie.fromJson(convert.json.decode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
   }
 
   // Prompt user to open location services
