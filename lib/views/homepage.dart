@@ -30,6 +30,7 @@ class _HomepageState extends State<Homepage>
   String errorMessage = "";
   int _selectedIndex = 0;
   Future<Movie> futureMovie;
+  List<dynamic> listMovie = [];
 
 
   void _onMapCreated(GoogleMapController controller) {
@@ -46,7 +47,7 @@ class _HomepageState extends State<Homepage>
     turnOffLoadingCircle();
 
     // Get movies
-    futureMovie = fetchMovie();
+    fetchMovies();
     
   }
 
@@ -106,32 +107,20 @@ class _HomepageState extends State<Homepage>
               zoom: 12.0,
             ),
           ) : MaterialApp(
-            title: 'Fetch Data Example',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            debugShowCheckedModeBanner: false,
             home: Scaffold(
-              appBar: AppBar(
-                title: Text('Fetch Data Example'),
-              ),
               body: Container(
                 height:SizeConfig.screenHeight,
                 width: SizeConfig.screenWidth,
-                child: Center(
-                  child: FutureBuilder<Movie>(
-                    future: futureMovie,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Text(snapshot.data.title);
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-
-                      // By default, show a loading spinner.
-                      return CircularProgressIndicator();
-                    },
+                child: Card(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        child: Expanded(child: buildMovies(context)),
+                      )
+                    ],
                   ),
-                ),
+                )
               ),
             ),
           ),
@@ -241,7 +230,7 @@ class _HomepageState extends State<Homepage>
               onPressed:  () {
                 // Go to the showtimes tab which calls the the showtimes class
                 Navigator.pop(context);
-                fetchMovie();
+                fetchMovies();
                 _onItemTapped(1);
               },
             ),
@@ -265,20 +254,75 @@ class _HomepageState extends State<Homepage>
     );
   }
 
-  Future<Movie> fetchMovie() async {
-    final response = await http.get('https://jsonplaceholder.typicode.com/albums/1');
-
-    print(response.statusCode);
+  Future<List<dynamic>> fetchMovies() async {
+    
+    final response = await http.get(
+      'https://api.themoviedb.org/3/movie/now_playing?api_key=<YOUR-KEY-HERE>'
+    );
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      return Movie.fromJson(convert.json.decode(response.body));
+      Map<String, dynamic> map = convert.json.decode(response.body);
+      List<dynamic> data = map["results"];
+      Movie resultMovie;
+      for(int i = 0; i < data.length; i++) {
+        resultMovie = Movie(
+          movieName: data[i]["title"],
+          movieReleaseDate: data[i]["release_date"],
+          movieOverview: data[i]["overview"],
+          movieImage: data[i]["poster_path"],
+        );
+        listMovie.add(resultMovie);
+      }
+      return listMovie;
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load movie');
     }
+  }
+
+  Widget buildMovies(BuildContext context) {
+    return _buildMoviesList(context);
+  }
+
+  ListView _buildMoviesList(context) {
+    return ListView.builder(
+      // Must have an item count equal to the number of items!
+      itemCount: listMovie.length,
+      // A callback that will return a widget.
+      itemBuilder: _buildMovieItem,
+    );
+  }
+
+  Widget _buildMovieItem(BuildContext context, int index) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          ListTile(         
+            title:  Align(
+              child: Column(
+                children: <Widget>[
+                  Text('${listMovie[index].movieName}'),
+                  Text('Release Date: ' '${listMovie[index].movieReleaseDate}\n'),
+                ],
+              ),             
+              alignment: Alignment.center,
+            ),
+            subtitle:  Align(
+              child: new Text(listMovie[index].movieOverview),
+              alignment: Alignment.center,
+            ),
+          ),
+        ],
+      ),
+    );
+    /*
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(4.0)),
+      child: Image.network('https://image.tmdb.org/t/p/original' '${listMovie[index].movieImage}'),
+    );*/
   }
 
   // Prompt user to open location services

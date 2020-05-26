@@ -1,42 +1,35 @@
+//import 'package:flutter/material.dart';
+
 class Movie {
 
-/*
   // Variables that make up a movie
-  final String theaterName;
-  final String theaterAddress;
-  final String theaterCity;
-  final String theaterZIP;
+  final String movieName;
+  final String movieReleaseDate;
+  final String movieOverview;
+  final String movieImage;
 
   // Constructor to create an instance of a movie
   Movie({
-    this.theaterName,
-    this.theaterAddress,
-    this.theaterCity,
-    this.theaterZIP
+    this.movieName,
+    this.movieReleaseDate,
+    this.movieOverview,
+    this.movieImage
   });
 
 
   // Get all variables from the JSON result
-  factory Movie.fromJson(Map<String, dynamic> json) {
-    return Movie(
-      theaterName: json['cinema_name'],
-      theaterAddress: json['address'],
-      theaterCity: json['city'],
-      theaterZIP: json['postcode'],
-    );
-  } */
+  factory Movie.fromJson(Map<String, dynamic> json) => Movie(
+    movieName: json["title"],
+    movieReleaseDate: json["release_date"],
+    movieOverview: json["overview"],
+    movieImage: json["poster_path"],
+  );
 
-  final int userId;
-  final int id;
-  final String title;
-
-  Movie({this.userId, this.id, this.title});
-
-  factory Movie.fromJson(Map<String, dynamic> json) {
-    return Movie(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-    );
-  }
+  Map<String, dynamic> toJson() =>
+    {
+      'title': movieName,
+      'release_date': movieReleaseDate,
+      'overview': movieOverview,
+      'poster_path' : movieImage,
+    };
 }
