@@ -1,7 +1,7 @@
 import 'package:find_a_flick/main.dart';
 import 'package:find_a_flick/views/tos.dart';
 import 'package:flutter/material.dart';
-import 'package:find_a_flick/screensize/sizeconfig.dart';
+import 'package:find_a_flick/models/sizeconfig.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';

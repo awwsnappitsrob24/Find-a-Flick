@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:find_a_flick/main.dart';
+import 'package:find_a_flick/models/sizeconfig.dart';
 
 class TOSPage extends StatefulWidget {
  const TOSPage({Key key}) : super(key: key);
@@ -53,6 +53,8 @@ If you provide any information that is untrue, inaccurate, not current, or incom
         body: SingleChildScrollView(
           padding: EdgeInsets.all(20.0),
           child: Container(
+            height:SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
             child : Column(
               children: <Widget>[
                 Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center),
