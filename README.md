@@ -1,3 +1,5 @@
 # Find-a-Flick
 
-Find-a-Flick is an Android Application built using Flutter and the dart programming language along with Firebase as its backend. It also uses Tensorflow to detect the user's face which may be used for user login instead of the traditional email/password login.
+Find-a-Flick is a mobile application built using Flutter and Dart along with Firebase as its backend. It uses the Google Maps API (also Places API) to find the nearest theaters from the user's location and gathers all the showtimes from a selected theater.
+
+<b>**UPDATED: The application now only gathers movies that are now playing instead because all theaters are closed because of the Coronavirus pandemic.</b>
