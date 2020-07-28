@@ -15,9 +15,9 @@
         android:label="Find-a-Flick"
         android:icon="@mipmap/ic_launcher">
 
-        <!-- Google Maps -->
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="YOUR-KEY-HERE"/>
+
                
         <activity
             android:name=".MainActivity"
