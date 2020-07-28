@@ -257,7 +257,7 @@ class _HomepageState extends State<Homepage>
 
   Future<List<dynamic>> fetchMovies() async {
     final response = await http.get(
-        'https://api.themoviedb.org/3/movie/now_playing?api_key=240dfc01e28615025eb43251da180035');
+        'https://api.themoviedb.org/3/movie/now_playing?api_key=your-key-here');
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
