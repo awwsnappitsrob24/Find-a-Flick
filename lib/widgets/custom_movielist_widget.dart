@@ -1,6 +1,6 @@
 import 'package:find_a_flick/models/movie.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:find_a_flick/widgets/movie_description.dart';
+import 'package:find_a_flick/widgets/movie_description_widget.dart';
 
 class CustomMovieList extends StatelessWidget {
   CustomMovieList({
