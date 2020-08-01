@@ -89,9 +89,11 @@ class _TopRatedMoviesState extends State<TopRatedMovies>
       _isLoading = true;
     });
     List<dynamic> movieList = await apiService.fetchTopRatedMovies();
-    setState(() {
-      listMovie = movieList;
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        listMovie = movieList;
+        _isLoading = false;
+      });
+    }
   }
 }
