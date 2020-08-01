@@ -220,7 +220,6 @@ class _HomepageState extends State<Homepage>
                   // Clear list first to avoid duplicating list from previous query
                   listMovie.clear();
                   listMovie = await apiServices.fetchMovies();
-                  print(listMovie.length);
                   _onItemTapped(1);
                 },
               ),
