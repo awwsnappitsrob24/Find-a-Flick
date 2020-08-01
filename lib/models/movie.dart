@@ -19,14 +19,14 @@ class Movie {
       movieName: json["title"],
       movieReleaseDate: json["release_date"],
       movieOverview: json["overview"],
-      movieImage: json["poster_path"],
+      movieImage: json["backdrop_path"],
       movieRating: json["vote_average"]);
 
   Map<String, dynamic> toJson() => {
         'title': movieName,
         'release_date': movieReleaseDate,
         'overview': movieOverview,
-        'poster_path': movieImage,
+        'backdrop_path': movieImage,
         'vote_average': movieRating,
       };
 }
