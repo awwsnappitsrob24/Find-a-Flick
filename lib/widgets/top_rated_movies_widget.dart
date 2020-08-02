@@ -1,4 +1,5 @@
 import 'package:find_a_flick/models/sizeconfig.dart';
+import 'package:find_a_flick/views/movie_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:find_a_flick/services/api_services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -46,8 +47,8 @@ class _TopRatedMoviesState extends State<TopRatedMovies>
               inAsyncCall: _isLoading,
               child: GridView.count(
                   primary: false,
-                  padding: /* You can add padding: */ const EdgeInsets.all(20),
-                  crossAxisCount: /* This makes it 2x2: */ 2,
+                  padding: const EdgeInsets.all(10),
+                  crossAxisCount: 2,
                   shrinkWrap: true,
                   children: List.generate(listMovie.length, (index) {
                     return _buildMovieItem(context, index);
@@ -62,8 +63,11 @@ class _TopRatedMoviesState extends State<TopRatedMovies>
   Widget _buildMovieItem(BuildContext context, int index) {
     return InkWell(
       onTap: () {
-        print("Clicked ${listMovie[index].movieName}");
-        // ToDo: Go to another view (movie_info_page)
+        // Go to the movie info page for selected movie
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MovieInfoPage(movie: listMovie[index])));
       },
       child: Card(
         child: Column(
