@@ -1,16 +1,16 @@
 import 'package:find_a_flick/widgets/showtimes_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:find_a_flick/models/sizeconfig.dart';
+import 'package:find_a_flick/helpers/helper_functions.dart';
 import 'package:find_a_flick/widgets/top_rated_movies_widget.dart';
 import 'package:find_a_flick/widgets/no_location_widget.dart';
 import 'package:find_a_flick/widgets/no_movie_widget.dart';
 import 'package:find_a_flick/services/api_services.dart';
-import 'package:find_a_flick/helpers/helper_functions.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:find_a_flick/models/movie.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart' as Geolocator;
 import 'package:google_maps_webservice/places.dart' as LocationManager;
-import 'package:find_a_flick/models/movie.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -20,23 +20,21 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
-  GoogleMapController mapController;
-  Geolocator.Position currentLocation;
-  LocationManager.Location myLocation;
-  Set<Marker> markers = Set();
-  static const kGoogleApiKey = "YOUR_API_KEY";
-  LocationManager.GoogleMapsPlaces _places =
-      LocationManager.GoogleMapsPlaces(apiKey: kGoogleApiKey);
-  List<LocationManager.PlacesSearchResult> places = [];
-  String errorMessage = "";
   int _selectedIndex = 0;
   Future<Movie> futureMovie;
   List<dynamic> listMovie = [];
   APIServices apiServices = APIServices();
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
+  GoogleMapController mapController;
+  Geolocator.Position currentLocation;
+  LocationManager.Location myLocation;
+  Set<Marker> markers = Set();
+  //static const kGoogleApiKey = "YOUR_API_KEY";
+  static const kGoogleApiKey = "AIzaSyAmcgpHwza5b8jXdNLbUmfrAJhCPqUhhZU";
+  LocationManager.GoogleMapsPlaces _places =
+      LocationManager.GoogleMapsPlaces(apiKey: kGoogleApiKey);
+  List<LocationManager.PlacesSearchResult> places = [];
+  String errorMessage = "";
+  APIServices apiService = APIServices();
 
   @override
   void initState() {
@@ -45,7 +43,7 @@ class _HomepageState extends State<Homepage>
     // Get user's location at startup to instantiate the center of the primary camera position
     _getLocation();
 
-    turnOffLoadingCircle();
+    //turnOffLoadingCircle();
   }
 
   @override
@@ -83,21 +81,28 @@ class _HomepageState extends State<Homepage>
               body: _selectedIndex == 0
                   ? currentLocation == null
                       ? NoLocationWidget()
-                      : GoogleMap(
-                          onMapCreated: _onMapCreated,
-                          mapType: MapType.normal,
-                          markers: markers,
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(currentLocation.latitude,
-                                currentLocation.longitude),
-                            zoom: 12.0,
-                          ),
-                        )
+                      : buildGoogleMapsWidget(context)
                   : _selectedIndex == 1
                       ? listMovie.length != 0
                           ? ShowtimesListWidget()
                           : NoMovieWidget()
                       : TopRatedMovies())),
+    );
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  Widget buildGoogleMapsWidget(BuildContext context) {
+    return GoogleMap(
+      onMapCreated: _onMapCreated,
+      mapType: MapType.normal,
+      markers: markers,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        zoom: 12.0,
+      ),
     );
   }
 
@@ -138,7 +143,7 @@ class _HomepageState extends State<Homepage>
 
     setState(() {
       // Turn off loading progress hud
-      turnOffLoadingCircle();
+      //turnOffLoadingCircle();
 
       // Get all the results if there are any
       if (result.status == "OK") {
@@ -201,7 +206,8 @@ class _HomepageState extends State<Homepage>
                   Navigator.pop(context);
                   // Clear list first to avoid duplicating list from previous query
                   listMovie.clear();
-                  listMovie = await apiServices.fetchMovies();
+                  listMovie = await apiService.fetchMovies();
+
                   _onItemTapped(1);
                 },
               ),
