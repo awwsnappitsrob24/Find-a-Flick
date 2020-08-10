@@ -1,5 +1,3 @@
-import 'package:find_a_flick/models/actor.dart';
-
 class Movie {
   // Variables that make up a movie
   final int movieId;
@@ -8,17 +6,16 @@ class Movie {
   final String movieOverview;
   final String movieImage;
   final double movieRating;
-  final List<Actor> actors;
 
   // Constructor to create an instance of a movie
-  Movie(
-      {this.movieId,
-      this.movieName,
-      this.movieReleaseDate,
-      this.movieOverview,
-      this.movieImage,
-      this.movieRating,
-      this.actors});
+  Movie({
+    this.movieId,
+    this.movieName,
+    this.movieReleaseDate,
+    this.movieOverview,
+    this.movieImage,
+    this.movieRating,
+  });
 
   // Get all variables from the JSON result
   factory Movie.fromJson(Map<String, dynamic> json) => Movie(

@@ -28,8 +28,7 @@ class _HomepageState extends State<Homepage>
   Geolocator.Position currentLocation;
   LocationManager.Location myLocation;
   Set<Marker> markers = Set();
-  //static const kGoogleApiKey = "YOUR_API_KEY";
-  static const kGoogleApiKey = "AIzaSyAmcgpHwza5b8jXdNLbUmfrAJhCPqUhhZU";
+  static const kGoogleApiKey = "YOUR_API_KEY";
   LocationManager.GoogleMapsPlaces _places =
       LocationManager.GoogleMapsPlaces(apiKey: kGoogleApiKey);
   List<LocationManager.PlacesSearchResult> places = [];
