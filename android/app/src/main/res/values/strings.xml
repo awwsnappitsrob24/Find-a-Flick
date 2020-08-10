@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<<<<<<< HEAD
    
+=======
+    <string name="MapsAPI">AIzaSyBsI0FoSljVq-cPrdmZy6xiL7vVbA241XE</string>
+    <string name="AndroidAPI">IzaSyAmcgpHwza5b8jXdNLbUmfrAJhCPqUhhZU</string>
+    <string name="iOSAPI">AIzaSyCnPHbSSssX9G2VzPXQ-aIH9iS77qXKitw</string>
+    <string name="Placeholder">YOUR-KEY-HERE</string>
+    <string name="MovieGluAPIEndpoint">https://api-gate2.movieglu.com/</string>
+    <string name="MovieGluUsername">AKGP</string>
+    <string name="MovieGluxapikey">nnYHOgceFY6UenCIzev729QvkCQ71Cs37pxVaq4A</string>
+    <string name="MovieGluAPITerritory">US</string>
+    <string name="MovieGluAPIAuth">	Basic QUtHUDo0OHE0NjhoMUdXa08=</string>
+    <string name="MovieGluAPIReqLimit">75</string>
+    <string name="TMDBAPIKey">240dfc01e28615025eb43251da180035</string>
+    <string name="TMDBAPIReadAccessToken">eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNDBkZmMwMWUyODYxNTAyNWViNDMyNTFkYTE4MDAzNSIsInN1YiI6IjVlY2NiYTk1MDIxY2VlMDAyMThhNzMyMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SoFHf2Yfd1lySqagIKjiI7AIVX6tH5WAkTBUml9MLFI
+>>>>>>> 0167e5f060c8bbe206c45f0c400e42642f40fe8b
 </string>
 
 </resources>
