@@ -1,3 +1,4 @@
+import 'package:find_a_flick/views/actor_info_page.dart';
 import 'package:flutter/material.dart';
 
 class ActorScroller extends StatelessWidget {
@@ -11,9 +12,17 @@ class ActorScroller extends StatelessWidget {
       padding: const EdgeInsets.only(right: 16.0),
       child: Column(
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(actor.actorPhotoUrl),
-            radius: 50.0,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  ctx,
+                  MaterialPageRoute(
+                      builder: (context) => ActorInfoPage(actor)));
+            },
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(actor.actorPhotoUrl),
+              radius: 50.0,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
