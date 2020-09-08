@@ -10,7 +10,7 @@ class ActorInfoPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         child: Center(
-          child: Text(actor.actorName),
+          child: Text(actor.actorId.toString()),
         ),
       ),
     );
